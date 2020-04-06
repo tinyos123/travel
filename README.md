@@ -7,12 +7,9 @@
 ### Conceptual Questions
 
 1. Describe three desirable properties for infrastructure.
-- **Available:** 
-  - No or limited interruption to provided services.
-- **Resilient:** 
-  - Can adapt to unknown and unexpected situations.
-- **Scalable:** 
-  - Can increase specific units in response to demand.
+- **Available:** No or limited interruption to provided services.
+- **Resilient:** Can adapt to unknown and unexpected situations.
+- **Scalable:** Can increase specific units in response to demand.
 
 
 2. Describe some benefits and issues related to using Load Balancers.
