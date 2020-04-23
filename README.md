@@ -1,41 +1,39 @@
-# HW3-DevOps
+# HW4-DevOps
 
-### Building Infrastructure
+### Building Monitoring Infrastructure
 
-* Complete Tasks 1--5.
-
-### Conceptual Questions
-
-1. Describe three desirable properties for infrastructure.
-- **Available:** No or limited interruption to provided services.
-- **Resilient:** Can adapt to unknown and unexpected situations.
-- **Scalable:** Can increase specific units in response to demand.
-
-
-2. Describe some benefits and issues related to using Load Balancers.
-- **Benefits:** 
-  - **Available:** Send traffic to healthy instances.
-  - **Scalable:** Request new instances as needed.
-  - **Efficiency:** Shift delivery of static content from infrastructure to third-party provider.
-  
-- **Issues:** 
-  - When load balancer goes down, stand-by servers can take over in the event leader goes down.
-  
-  
-3. What are some reasons for keeping servers in seperate availability zones?
-- Supports isolation and spreads risk by operating instances in independent pools to avoid **cascading** failures.
-- Ensures **availability** and **robustness**. Useful for supporting certain deployment strategies.
-- Geographically placed production environments.
-
-
-4. Describe the Circuit Breaker and Bulkhead pattern.
-- **Circuit Breaker:**
-  - Circuit breaker avoids making the protected call when the circuit is open, it eliminates connections to faulty services. Circuit breakers help reduce resources tied up in operations which are likely to fail. Also, it avoids waiting on timeouts for the client, and a broken circuit avoids putting load on a struggling server.
-
-- **Bulkhead pattern:**
-  - Bulkheads effectively isolate components and protect from cascading failures through the enforcement of limits (load shedding).
-
+* Tasks 1--5 completed, please check the screencast below.
 
 ### Screencast
 
-[Click here to view the screencast](https://docs.google.com/forms/d/e/1FAIpQLSe30s_3WGuBNCMIycibJX7Aa_jVltrMkS0np6Udzq9yi6MvNQ/viewform?usp=sf_link)
+[Click here to view the screencast](https://drive.google.com/open?id=171mad6avsXsuluGrb3B5eXnN7O2dRRpb)
+
+### Conceptual Questions
+
+1. Compare a channel deployment model with a ring deployment model.
+- **Channels deployment model** changes test in channel. After 2 weeks, changes promoted to next channel, unless fast tracked or booted by release engineer. This is a good model for easily rollback and for those with high delivering costs. Although **Ring model** shares a lot of similarities with the channel model, ring model changes who actually get it. It promotes change from internal users to early adopters and wider and wider group of users. Change can stay in ring for weeks.
+
+
+2. Identify 2 situations where an expand/contract deployment could be useful.
+- Parallel Change: try to make a change in the server, however some updates can block read/write operations. It's the case you want to deploy co-changes to two dependent but seperate systems without downtime. The expand enables adding a new field and do a duplicate write, then migrate them in the database. The contract step removes the reference and drop it. It's a good way to coordinate in co-systems such that there are no blocking operations.
+
+- Database Refactoring: Most database refactorings follow the expand/contract pattern, where the migrate phase is the transition period between the original and the new schema, until all database access code has been updated to work with the new schema.
+
+
+3. What are some tradeoffs associated with dark launches?
+- **Benefits:**
+  - **No release branches**. Can help eliminate the need to support long-running release branch. Reduces merge issues.
+  - **Allows stability and experimentation**. Developer can test in production--for example, test load speeds for recent images without user needing to see. Can conditionally turn on for some segments of users to gather usage data.
+  - **Improve disaster recovery**. No rollback, just turn off feature.
+
+- **Issues:**
+  - **Technical debt**. Removing flags is a highly variable practice. Reusing old flags can be disastrous.
+  - **Mixed experiences**. Inconsistent user experiences can reduce satisfaction.
+  - **Stability**. Supporting multiple permutations of software can increase engineering costs and reduce stability.
+
+
+4. Describe the Netflix style green-blue deployment. What can canary analysis tell us?
+
+- **Netflix style:** The deployment a new version of an app will start to receive traffic as soon as it passes health checks. Once the green version is healthy, the previous blue version is disabled and receives no traffic. If a rollback is needed, making a change is as simple as enabling the previous version. This model allows to move fast and get back to a known good state if something goes wrong.
+
+- **Canary analysis:** can characteize system behaviors as "Pass", "High", "Low", by comparing between canary and baseline metrics. Also, it enables checking if meeting capacity requirements by gradually ramping up load.
